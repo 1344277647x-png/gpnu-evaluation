@@ -18,18 +18,20 @@ from chat import chat_bp
 
 conf = Config()
 
+print(f'DB URI: {conf.SQLALCHEMY_DATABASE_URI[:80]}...')
+
 engine = create_engine(conf.SQLALCHEMY_DATABASE_URI, pool_pre_ping=True, pool_recycle=3600)
 SessionLocal = sessionmaker(bind=engine)
 
-# Auto-init database on startup (non-fatal if DB not ready yet)
 def init_database():
     try:
         inspector = inspect(engine)
         existing = inspector.get_table_names()
-        if 'users' in existing:
-            print(f'Database OK ({len(existing)} tables)')
+        print(f'Existing tables: {existing}')
+        if 'users' in existing and 'courses' in existing:
+            print('Database OK')
             return
-        print('Initializing database...')
+        print('Running init_db.sql...')
         sql_path = os.path.join(os.path.dirname(__file__), 'init_db.sql')
         with open(sql_path, 'r', encoding='utf-8') as f:
             sql_content = f.read()
@@ -40,10 +42,11 @@ def init_database():
                     try:
                         conn.execute(text(stmt))
                     except Exception as e:
-                        print(f'  Skip: {str(e)[:100]}')
-        print(f'Database initialized ({len(inspect(engine).get_table_names())} tables)')
+                        print(f'  Warning: {str(e)[:100]}')
+        final = inspect(engine).get_table_names()
+        print(f'Tables after init: {final}')
     except Exception as e:
-        print(f'DB init skipped (will retry next deploy): {str(e)[:200]}')
+        print(f'DB init failed: {str(e)[:200]}')
 
 init_database()
 
