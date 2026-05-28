@@ -11,10 +11,13 @@ RUN npm run build
 FROM python:3.12-slim
 WORKDIR /app
 
-# Install system deps
+# System deps
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     && rm -rf /var/lib/apt/lists/*
+
+# Unbuffered output for real-time logs
+ENV PYTHONUNBUFFERED=1
 
 # Python deps
 COPY backend/requirements.txt .

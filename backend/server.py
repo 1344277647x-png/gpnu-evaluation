@@ -21,7 +21,7 @@ conf = Config()
 engine = create_engine(conf.SQLALCHEMY_DATABASE_URI, pool_pre_ping=True, pool_recycle=3600)
 SessionLocal = sessionmaker(bind=engine)
 
-STATIC_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'frontend', 'dist'))
+STATIC_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), 'frontend', 'dist'))
 
 app = Flask(__name__, static_folder=STATIC_DIR, static_url_path='')
 app.config['SECRET_KEY'] = conf.SECRET_KEY
