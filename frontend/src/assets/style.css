@@ -1,0 +1,143 @@
+*,
+*::before,
+*::after {
+  margin: 0; padding: 0; box-sizing: border-box;
+}
+
+:root {
+  --el-color-primary: #10b981;
+  --el-color-primary-light-3: #34d399;
+  --el-color-primary-light-5: #6ee7b7;
+  --el-color-primary-light-7: #a7f3d0;
+  --el-color-primary-light-9: #d1fae5;
+  --el-color-primary-dark-2: #059669;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  background:
+    /* 底部底色 */
+    linear-gradient(160deg, #ecfdf5 0%, #f0f9ff 35%, #faf5ff 65%, #f0fdf4 100%);
+  background-attachment: fixed;
+  color: #1f2937;
+  -webkit-font-smoothing: antialiased;
+  position: relative;
+}
+
+/* 背景装饰光斑 — 让玻璃有东西可"透" */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 60% 50% at 15% 20%, rgba(16,185,129,0.12) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 45% at 80% 30%, rgba(99,102,241,0.08) 0%, transparent 55%),
+    radial-gradient(ellipse 55% 40% at 50% 65%, rgba(245,158,11,0.06) 0%, transparent 55%),
+    radial-gradient(ellipse 40% 35% at 90% 80%, rgba(16,185,129,0.07) 0%, transparent 50%),
+    radial-gradient(ellipse 45% 30% at 10% 75%, rgba(168,85,247,0.05) 0%, transparent 50%);
+}
+
+a { text-decoration: none; color: inherit; }
+#app-container { min-height: 100vh; position: relative; z-index: 1; }
+
+/* === Glass: Header === */
+.app-header {
+  background: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-left .logo {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 18px; font-weight: 600; color: #1f2937;
+  transition: color 0.2s;
+}
+.header-left .logo:hover { color: #10b981; }
+.header-right { display: flex; align-items: center; gap: 12px; }
+
+.user-info {
+  display: flex; align-items: center; gap: 4px;
+  cursor: pointer; color: #374151; transition: color 0.2s;
+}
+.user-info:hover { color: #10b981; }
+
+.app-main {
+  min-height: calc(100vh - 96px);
+  padding: 28px 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+.app-footer {
+  text-align: center; color: #9ca3af; font-size: 12px;
+  display: flex; align-items: center; justify-content: center;
+  height: 40px;
+  border-top: 1px solid rgba(16,185,129,0.08);
+}
+
+.page-header { margin-bottom: 20px; }
+.page-header h2 { font-size: 22px; font-weight: 600; color: #1f2937; }
+
+.course-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+
+@media (max-width: 1024px) { .course-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 768px) { .course-grid { grid-template-columns: repeat(2, 1fr); } .app-main { padding: 16px 12px; } }
+@media (max-width: 480px) { .course-grid { grid-template-columns: 1fr; } }
+
+/* === Glass: el-card (global override) === */
+.el-card {
+  background: rgba(255, 255, 255, 0.18) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08) !important;
+}
+
+/* === Glass: el-dialog === */
+.el-dialog {
+  background: rgba(255, 255, 255, 0.20) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  border-radius: 18px !important;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.12) !important;
+}
+
+/* === Glass: table === */
+.el-table {
+  --el-table-bg-color: transparent !important;
+  --el-table-tr-bg-color: transparent !important;
+  --el-table-header-bg-color: rgba(16,185,129,0.06) !important;
+}
+
+/* === Glass: input === */
+.el-input__wrapper {
+  background: rgba(255, 255, 255, 0.22) !important;
+  backdrop-filter: blur(6px) !important;
+  -webkit-backdrop-filter: blur(6px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+/* === Glass: dropdown/popper === */
+.el-select-dropdown,
+.el-popper.is-light {
+  background: rgba(255, 255, 255, 0.22) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+}
