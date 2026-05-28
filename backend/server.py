@@ -29,8 +29,23 @@ def init_database():
         existing = inspector.get_table_names()
         print(f'Tables before: {existing}')
         if 'users' in existing and 'courses' in existing:
-            print('DB OK')
-            return
+        print('DB OK, checking data...')
+        # Always attempt to insert seed data
+        sql_path = os.path.join(os.path.dirname(__file__), 'init_db.sql')
+        with open(sql_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+        count = 0
+        with engine.begin() as conn:
+            for stmt in content.split(';'):
+                stmt = stmt.strip()
+                if stmt.upper().startswith('INSERT'):
+                    try:
+                        conn.execute(text(stmt))
+                        count += 1
+                    except Exception:
+                        pass
+        print(f'Inserted {count} data blocks')
+        return
         print('Creating tables via SQLAlchemy...')
         from models import Base
         Base.metadata.create_all(engine)
