@@ -23,18 +23,18 @@ print(f'DB: {conf.SQLALCHEMY_DATABASE_URI[:60]}...')
 engine = create_engine(conf.SQLALCHEMY_DATABASE_URI, pool_pre_ping=True, pool_recycle=3600)
 SessionLocal = sessionmaker(bind=engine)
 
+
 def init_database():
     try:
         inspector = inspect(engine)
         existing = inspector.get_table_names()
-        print(f'Tables before: {existing}')
-        if 'users' in existing and 'courses' in existing:
-            print('DB OK')
-        else:
-            print('Creating tables...')
+        print(f'Tables: {existing}')
+        if 'users' not in existing:
             from models import Base
             Base.metadata.create_all(engine)
             print(f'Created: {inspect(engine).get_table_names()}')
+        else:
+            print('DB OK')
 
         sql_path = os.path.join(os.path.dirname(__file__), 'init_db.sql')
         with open(sql_path, 'r', encoding='utf-8') as f:
@@ -49,9 +49,10 @@ def init_database():
                         count += 1
                     except Exception:
                         pass
-        print(f'Inserted {count} data blocks')
+        print(f'Seeded {count} rows')
     except Exception as e:
-        print(f'DB init error: {e}')
+        print(f'Init error: {e}')
+
 
 init_database()
 
@@ -63,37 +64,4 @@ app.config['SECRET_KEY'] = conf.SECRET_KEY
 CORS(app, origins='*', supports_credentials=True)
 
 app.register_blueprint(auth_bp, url_prefix='/api/auth')
-app.register_blueprint(courses_bp, url_prefix='/api/courses')
-app.register_blueprint(reviews_bp, url_prefix='/api')
-app.register_blueprint(teachers_bp, url_prefix='/api/teachers')
-app.register_blueprint(categories_bp, url_prefix='/api/categories')
-app.register_blueprint(admin_bp, url_prefix='/api')
-app.register_blueprint(my_bp, url_prefix='/api')
-app.register_blueprint(chat_bp, url_prefix='/api')
-
-
-@app.route('/', defaults={'path': ''})
-@app.route('/<path:path>')
-def serve_frontend(path):
-    if path and os.path.exists(os.path.join(STATIC_DIR, path)):
-        return send_from_directory(STATIC_DIR, path)
-    return send_from_directory(STATIC_DIR, 'index.html')
-
-
-@app.before_request
-def open_db():
-    g.db_session = SessionLocal()
-
-
-@app.teardown_request
-def close_db(exc):
-    session = g.pop('db_session', None)
-    if session:
-        session.close()
-
-
-if __name__ == '__main__':
-    print(f'Static: {STATIC_DIR}')
-    port = 5000
-    print(f'Serving on http://0.0.0.0:{port}')
-    serve(app, host='0.0.0.0', port=port, threads=8)
+app.register_blueprint(courses_bp, url_prefix
