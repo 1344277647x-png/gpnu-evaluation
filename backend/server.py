@@ -36,7 +36,7 @@ def init_database():
         Base.metadata.create_all(engine)
         print(f'Tables after: {inspect(engine).get_table_names()}')
     except Exception as e:
-        print(f'DB init error (non-fatal): {e}')
+        print(f'DB init error: {e}')
 
 init_database()
 
