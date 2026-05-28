@@ -64,4 +64,37 @@ app.config['SECRET_KEY'] = conf.SECRET_KEY
 CORS(app, origins='*', supports_credentials=True)
 
 app.register_blueprint(auth_bp, url_prefix='/api/auth')
-app.register_blueprint(courses_bp, url_prefix
+app.register_blueprint(courses_bp, url_prefix='/api/courses')
+app.register_blueprint(reviews_bp, url_prefix='/api')
+app.register_blueprint(teachers_bp, url_prefix='/api/teachers')
+app.register_blueprint(categories_bp, url_prefix='/api/categories')
+app.register_blueprint(admin_bp, url_prefix='/api')
+app.register_blueprint(my_bp, url_prefix='/api')
+app.register_blueprint(chat_bp, url_prefix='/api')
+
+
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def serve_frontend(path):
+    if path and os.path.exists(os.path.join(STATIC_DIR, path)):
+        return send_from_directory(STATIC_DIR, path)
+    return send_from_directory(STATIC_DIR, 'index.html')
+
+
+@app.before_request
+def open_db():
+    g.db_session = SessionLocal()
+
+
+@app.teardown_request
+def close_db(exc):
+    session = g.pop('db_session', None)
+    if session:
+        session.close()
+
+
+if __name__ == '__main__':
+    print(f'Static: {STATIC_DIR}')
+    port = int(os.environ.get('PORT', 5000))
+    print(f'Serving on http://0.0.0.0:{port}')
+    serve(app, host='0.0.0.0', port=port, threads=8)
