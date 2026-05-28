@@ -94,6 +94,6 @@ def close_db(exc):
 
 if __name__ == '__main__':
     print(f'Static: {STATIC_DIR}')
-    port = int(os.environ.get('PORT', 5000))
+    port = 5000
     print(f'Serving on http://0.0.0.0:{port}')
     serve(app, host='0.0.0.0', port=port, threads=8)
