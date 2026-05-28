@@ -13,7 +13,7 @@ class Config:
     DB_PORT = int(os.environ.get('MYSQLPORT') or os.environ.get('DB_PORT', 3306))
     DB_USER = os.environ.get('MYSQLUSER') or os.environ.get('DB_USER', 'root')
     DB_PASSWORD = os.environ.get('MYSQLPASSWORD') or os.environ.get('DB_PASSWORD', '626957')
-    DB_NAME = os.environ.get('MYSQLDATABASE') or os.environ.get('DB_NAME', 'gpnu_evaluation')
+    DB_NAME = os.environ.get('MYSQLDATABASE') or os.environ.get('DB_NAME', 'railway')
 
     @property
     def SQLALCHEMY_DATABASE_URI(self):
